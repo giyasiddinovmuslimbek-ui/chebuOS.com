@@ -1,0 +1,8 @@
+(() => {
+ const input=document.getElementById('app-search'),cards=[...document.querySelectorAll('.app-card')],buttons=[...document.querySelectorAll('[data-filter]')],empty=document.getElementById('empty'),count=document.getElementById('result-count');let category='Все';
+ function update(){const q=input.value.toLocaleLowerCase('ru').trim();let n=0;cards.forEach(c=>{const show=(category==='Все'||c.dataset.category===category)&&c.textContent.toLocaleLowerCase('ru').includes(q);c.hidden=!show;if(show)n++;});empty.hidden=n!==0;count.textContent=`Найдено приложений: ${n}`;}
+ input.addEventListener('input',update);buttons.forEach(b=>b.addEventListener('click',()=>{category=b.dataset.filter;buttons.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));update();}));
+ const modal=document.getElementById('app-modal'),close=document.getElementById('modal-close');let lastFocus;
+ cards.forEach(c=>c.querySelector('[data-app]').addEventListener('click',()=>{lastFocus=document.activeElement;document.getElementById('modal-title').textContent=c.querySelector('h3').textContent;document.getElementById('modal-desc').textContent=c.querySelector('p').textContent;modal.hidden=false;close.focus();}));
+ function dismiss(){modal.hidden=true;lastFocus?.focus();}close.addEventListener('click',dismiss);modal.addEventListener('click',e=>{if(e.target===modal)dismiss()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!modal.hidden)dismiss();});update();
+})();
